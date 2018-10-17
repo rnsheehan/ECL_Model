@@ -41,29 +41,12 @@ public:
 	// getters
 	inline double get_Rg() { return Rg;  }
 	inline double get_Rr() { return Rr;  }
+	inline double get_rtRr() { return rtRr;  }
 
 private:
 	double Rg; // peak grating reflectance
 	double Rr; // RSOA rear facet reflectance
-};
-
-// Quantum Efficiency Parameters
-
-class quanteff {
-public:
-	quanteff();
-	quanteff(double diff_qe, double int_qe);
-	quanteff(const quanteff &qq);
-
-	void set_params(double diff_qe, double int_qe);
-
-	// getters
-	inline double get_etad() { return etad;  }
-	inline double get_etai() { return etai;  }
-	
-private:
-	double etad; // differential quantum efficiency
-	double etai; // internal quantum efficiency
+	double rtRr; // square root of Rr
 };
 
 // Scattering and loss parameters
@@ -89,21 +72,19 @@ private:
 class dcvals {
 public:
 	dcvals(); 
-	dcvals(double curr_val, double volt_val, double Rth, double curr_th);
+	dcvals(double Rth, double curr_th);
 	dcvals(const dcvals &dd); 
 
-	void set_params(double curr_val, double volt_val, double Rth, double curr_th); 
+	void set_params(double Rth, double curr_th); 
 
-	inline double get_Ib(){ return Ib;  }
-	inline double get_Vb(){ return Vb;  }
+	inline double get_Zt() { return ZT;  }
+	inline double get_Ith() { return Ith;  }
 
 private:
-	double Ib; // DC current supplied to RSOA
-	double Vb; // DC voltage across RSOA
+	
 	double ZT; // laser thermal impedance
 	double Ith; // laser threshold current
-	double PsatT; // laser thermal saturation power
-	double Pdc; // DC power supplied to RSOA
+	
 }; 
 
 // Model for the ECL LI curve
@@ -111,21 +92,34 @@ private:
 class ec_laser {
 public:
 	ec_laser(); 
-	ec_laser(double &coupEff, lengths &theLength, quanteff &theEta, reflections &theRefs, losses &theLoss, dcvals &theDC);
+	ec_laser(double &coupEff, double &intQE, lengths &theLength, reflections &theRefs, losses &theLoss, dcvals &theDC);
 
-	void set_params(double &coupEff, lengths &theLength, quanteff &theEta, reflections &theRefs, losses &theLoss, dcvals &theDC);
+	void set_params(double &coupEff, double &intQE, lengths &theLength, reflections &theRefs, losses &theLoss, dcvals &theDC);
+
+	double Pout(double wavelength, double current); 
+
+	double Pout(double wavelength, double current, double T, double gamma, double aa, double T0, double T1);
+
 private:
-	// define function f(T, a) which characterises thermal roll-off
+	
+	double f(double T, double gamma, double aa); 
 
 private:
 	// there's going to be a lot of parameters
 	double eta; // waveguide coupling efficiency
+	double etad; // differential quantum efficiency
+	double etai; // internal quantum efficiency
 	double etaext; // external quantum efficiency
 	double Reff; // effective grating reflectance
+	double Rprime; // transmission parameter account for coupling efficiency
+	double Rprod; // reflection coefficient product
+	double RQfactor; // Combination of reflection coefficients and quantum efficiency
+	double PsatT; // laser thermal saturation power
+	double Ib; // DC current supplied to RSOA
+	double Vb; // DC voltage across RSOA
+	double Pdc; // DC power supplied to RSOA
 
 	lengths Lvals; // cavity and grating lengths
-
-	quanteff Qvals; // quantum efficiencies
 
 	reflections Rvals; // reflection coefficients
 
