@@ -100,8 +100,7 @@ public:
 
 	double Pout(double wavelength, double current, double T, double gamma, double aa, double T0, double T1);
 
-private:
-	
+private:	
 	double f(double T, double gamma, double aa); 
 
 private:

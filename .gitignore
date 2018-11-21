@@ -406,9 +406,6 @@ ASALocalRun/
 *.exe
 *.out
 *.apps
-Slab_Solver/.vs/Slab_Solver/v15/.suo
 *.ipch
 *.ipch
-Slab_Solver/.vs/Slab_Solver/v15/ipch/AutoPCH/66a3257cdf0f0551/SLAB_WG.ipch
-Slab_Solver/.vs/Slab_Solver/v15/ipch/AutoPCH/c24988231a348ce9/MAIN.ipch
 
